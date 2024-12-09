@@ -63,3 +63,7 @@ extension RideEstimateResponse.Driver {
         let comment: String
     }
 }
+
+extension RideEstimateResponse {
+    typealias Review = Driver.Review
+}
