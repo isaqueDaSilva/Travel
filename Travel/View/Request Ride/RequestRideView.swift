@@ -82,20 +82,14 @@ extension RequestRideView {
     
     @ViewBuilder
     private var makeRequestButtonComponent: some View {
-        Button {
-            viewModel.makeRideRequest()
-        } label: {
-            Group {
-                if viewModel.isProcessing {
-                    ProgressView()
-                } else {
-                    Text("Proximo")
-                }
+        ActionButton(
+            isProcessing: $viewModel.isProcessing,
+            title: "Escolher Motorista",
+            isDisabled: viewModel.isDisabled,
+            action: {
+                viewModel.makeRideRequest()
             }
-            .frame(maxWidth: .infinity)
-        }
-        .buttonStyle(.borderedProminent)
-        .disabled(viewModel.isDisabled)
+        )
         .listRowBackground(Color.clear)
         .listRowInsets(EdgeInsets())
     }
