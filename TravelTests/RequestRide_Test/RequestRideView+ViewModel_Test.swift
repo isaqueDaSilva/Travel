@@ -60,6 +60,23 @@ final class RequestRideView_ViewModel_Test: XCTestCase {
         )
     }
     
+    func test_isDisabled_isReturningTrueWhenWeProcessingTheRequest() {
+        guard let viewModel else {
+            XCTFail("View Model was not defined correctly.")
+            return
+        }
+        
+        viewModel.customerID = "BOSS"
+        viewModel.initialLocation = "1 Apple Park Way, Cupertino, CA, 95014"
+        viewModel.destination = "1 Infinite Loop, Cupertino, CA 95014"
+        viewModel.isProcessing = true
+        
+        XCTAssertTrue(
+            viewModel.isDisabled,
+            "This test should return true, because we are processing the ride request by user."
+        )
+    }
+    
     func test_isDisabled_isReturningFalseWhenAllPropertiesWasDefinedCorrectly() {
         guard let viewModel else {
             XCTFail("View Model was not defined correctly.")
