@@ -27,15 +27,6 @@ struct DriverRow: View {
                 }
             }
             .contentTransition(.symbolEffect(.replace))
-            .onTapGesture {
-                withAnimation(.smooth) {
-                    if wasChosen == nil {
-                        wasChosen = id
-                    } else {
-                        wasChosen = nil
-                    }
-                }
-            }
             
             LabeledContent {
                 VStack(alignment: .trailing) {
@@ -60,6 +51,15 @@ struct DriverRow: View {
             }
         }
         .padding()
+        .onTapGesture {
+            withAnimation(.smooth) {
+                if wasChosen == nil {
+                    wasChosen = id
+                } else {
+                    wasChosen = nil
+                }
+            }
+        }
         .background {
             RoundedRectangle(cornerRadius: 10)
                 .fill(.secondary.opacity(0.3))
