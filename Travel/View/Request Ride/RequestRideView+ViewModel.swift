@@ -28,7 +28,7 @@ extension RequestRideView {
         }
         
         var isDisabled: Bool {
-            isDestinationSameAsInitialLocation || isSomeFieldEmpty
+            isDestinationSameAsInitialLocation || isSomeFieldEmpty || isProcessing
         }
         
         func makeRideRequest(with urlSession: URLSession = .shared) {
