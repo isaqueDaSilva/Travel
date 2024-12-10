@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct DriverRow: View {
-    @Binding var wasChosen: Int?
+    @Binding var wasChosen: DriverInformation?
+    @Binding var chosenRideValue: Double?
     
     let id: Int
     let name: String
@@ -18,52 +19,75 @@ struct DriverRow: View {
     let rideValue: Double
     
     var body: some View {
-        HStack {
-            Group {
-                if wasChosen == id {
-                    Icon.circleFill.systemImage
-                } else {
-                    Icon.circle.systemImage
-                }
-            }
-            .contentTransition(.symbolEffect(.replace))
-            
-            LabeledContent {
-                VStack(alignment: .trailing) {
-                    Text("\(vehicle)")
-                        .font(.headline)
+        GroupBox {
+            contentDescription
+        } label: {
+            VStack {
+                HStack {
+                    choiceIndicator
                     
-                    Text(rideValue, format: .currency(code: "BRL"))
-                        .font(.headline)
-                    RatingStars(rating: rating)
+                    rideInformation
                 }
-            } label: {
-                VStack(alignment: .leading) {
-                    Text(name)
-                        .font(.title2)
-                        .bold()
-                    
-                    Text(description)
-                        .font(.callout)
-                        .lineLimit(2)
-                }
-                .padding(.trailing, 10)
+                
+                rowDivider
             }
         }
-        .padding()
         .onTapGesture {
             withAnimation(.smooth) {
-                if wasChosen == nil {
-                    wasChosen = id
-                } else {
-                    wasChosen = nil
-                }
+                setUserChoice()
             }
         }
-        .background {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(.secondary.opacity(0.3))
+    }
+}
+
+extension DriverRow {
+    @ViewBuilder
+    private var contentDescription: some View {
+        VStack(alignment: .leading) {
+            Text(description)
+                .font(.callout)
+                .padding(.bottom, 5)
+            
+            RatingStars(rating: rating)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    @ViewBuilder
+    private var choiceIndicator: some View {
+        Group {
+            if wasChosen?.id == id {
+                Icon.circleFill.systemImage
+            } else {
+                Icon.circle.systemImage
+            }
+        }
+        .contentTransition(.symbolEffect(.replace))
+    }
+    
+    @ViewBuilder
+    private var rideInformation: some View {
+        Text(name)
+            .font(.title2)
+            .bold()
+        
+        VStack(alignment: .trailing) {
+            Text(rideValue, format: .currency(code: "BRL"))
+                .font(.headline)
+            
+            Text("\(vehicle)")
+                .font(.headline)
+        }
+        .foregroundStyle(.secondary)
+        .frame(maxWidth: .infinity, alignment: .trailing)
+    }
+    
+    @ViewBuilder
+    private var rowDivider: some View {
+        Rectangle()
+            .frame(maxWidth: .infinity)
+            .frame(height: 1)
+            .padding(5)
     }
 }
 
@@ -78,9 +102,22 @@ extension DriverRow {
     }
 }
 
+extension DriverRow {
+    private func setUserChoice() {
+        if wasChosen == nil {
+            wasChosen = .init(id: self.id, name: self.name)
+            chosenRideValue = rideValue
+        } else {
+            wasChosen = nil
+            chosenRideValue = nil
+        }
+    }
+}
+
 #Preview {
     DriverRow(
         wasChosen: .constant(nil),
+        chosenRideValue: .constant(nil),
         id: 1,
         name: "Tim Cook",
         description: "Nice to meet you, I'm Tim. You can come in and enjoy the trip, because with my skills I will take you to your destination, focusing on your safety, agility and satisfaction. Just don't talk to me too much, because I don't like being interrupted when I'm concentrating.",
