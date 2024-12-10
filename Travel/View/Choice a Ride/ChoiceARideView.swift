@@ -8,52 +8,123 @@
 import SwiftUI
 
 struct ChoiceARideView: View {
-    let rideEstimated: RideEstimateResponse
+    @Binding var path: [RideEstimateResponse]
     
-    @State private var chosenDriver: Int? = nil
-    @State private var isProcessing = false
+    let rideEstimated: RideEstimateResponse
+    let customerID: String
+    let origin: String
+    let destination: String
+    
+    @State private var viewModel = ViewModel()
     
     var body: some View {
-        List {
-            ForEach(rideEstimated.options, id: \.id) { driver in
-                DriverRow(
-                    wasChosen: $chosenDriver,
-                    id: driver.id,
-                    name: driver.name,
-                    description: driver.description,
-                    vehicle: driver.vehicle,
-                    rating: driver.review.rating,
-                    rideValue: driver.value
-                )
-                .listRowBackground(Color.clear)
-                .listRowInsets(EdgeInsets())
-                .disabled(chosenDriver != nil && chosenDriver != driver.id)
-                .opacity((chosenDriver != nil && chosenDriver != driver.id) ? 0.5 : 1)
-                .padding(.bottom)
+        ScrollView {
+            VStack {
+                Group {
+                    if rideEstimated.options.isEmpty {
+                        emptyDriverIndicator
+                            .containerRelativeFrame(.vertical, alignment: .center)
+                    } else {
+                        driverList
+                        
+                        ActionButton(
+                            isProcessing: $viewModel.isProcessing,
+                            title: "Confirmar viagem",
+                            isDisabled: viewModel.isDisabledButton
+                        ) {
+                            viewModel.confirmRide(
+                                customerID: customerID,
+                                origin: origin,
+                                destination: destination,
+                                distance: rideEstimated.distance,
+                                duration: "\(rideEstimated.duration)"
+                            )
+                        }
+                    }
+                }
             }
-            
-            ActionButton(
-                isProcessing: $isProcessing,
-                title: "Confirmar viagem",
-                isDisabled: isProcessing || chosenDriver == nil
-            ) {
-                
-            }
-            .listRowBackground(Color.clear)
-            .listRowInsets(EdgeInsets())
-            .listRowSeparator(.hidden, edges: .all)
+            .padding(.horizontal)
         }
         .navigationTitle("Motoristas")
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    path.removeAll()
+                } label: {
+                    Image(systemName: "chevron.left")
+                    Text("Voltar")
+                }
+                .disabled(path.isEmpty)
+            }
+        }
+        .errorAlert(error: $viewModel.error) { }
+    }
+    
+    init(
+        path: Binding<[RideEstimateResponse]>,
+        rideEstimated: RideEstimateResponse,
+        customerID: String,
+        origin: String,
+        destination: String
+    ) {
+        self._path = path
+        self.rideEstimated = rideEstimated
+        self.customerID = customerID
+        self.origin = origin
+        self.destination = destination
     }
 }
 
-#Preview {
+extension ChoiceARideView {
+    @ViewBuilder
+    private var driverList: some View {
+        ForEach(rideEstimated.options, id: \.id) { driver in
+            DriverRow(
+                wasChosen: $viewModel.chosenDriver,
+                chosenRideValue: $viewModel.chosenRideValue,
+                id: driver.id,
+                name: driver.name,
+                description: driver.description,
+                vehicle: driver.vehicle,
+                rating: driver.review.rating,
+                rideValue: driver.value
+            )
+            .disabled(
+                viewModel.isDisabledDriverRow(
+                    driverID: driver.id
+                ) ||
+                !viewModel.isValidDistance(for: driver.id, distance: rideEstimated.distanceInKM)
+            )
+            .opacity(
+                viewModel.isDisabledDriverRow(
+                    driverID: driver.id
+                ) ||
+                !viewModel.isValidDistance(for: driver.id, distance: rideEstimated.distanceInKM)
+                ? 0.5 : 1
+            )
+            
+        }
+    }
+    
+    @ViewBuilder
+    private var emptyDriverIndicator: some View {
+        ContentUnavailableView(
+            "Nenhum motorista disponível",
+            systemImage: "car.side.roof.cargo.carrier.slash",
+            description: Text("Ops! Parece que não há motoristas disponíveis para reslizar sua viagem no momento.")
+        )
+    }
+}
+
+#Preview("With Drivers Options") {
     NavigationStack {
         ChoiceARideView(
+            path: .constant([]),
             rideEstimated: .init(
                 origin: .init(latitude: 0000, longitude: 0000),
                 destination: .init(latitude: 1111, longitude: 111),
-                distance: 3,
+                distance: 1000,
                 duration: 2,
                 options: [
                     .init(
@@ -79,7 +150,28 @@ struct ChoiceARideView: View {
                         value: 10.0
                     )
                 ]
-            )
+            ),
+            customerID: "CT01",
+            origin: "Apple Park",
+            destination: "Apple Infinite Loop"
+        )
+    }
+}
+
+#Preview("Empty Driver Options") {
+    NavigationStack {
+        ChoiceARideView(
+            path: .constant([]),
+            rideEstimated: .init(
+                origin: .init(latitude: 0000, longitude: 0000),
+                destination: .init(latitude: 1111, longitude: 111),
+                distance: 3,
+                duration: 2,
+                options: []
+            ),
+            customerID: "CT01",
+            origin: "Apple Park",
+            destination: "Apple Infinite Loop"
         )
     }
 }

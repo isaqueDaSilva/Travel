@@ -6,30 +6,180 @@
 //
 
 import XCTest
+@testable import Travel
 
+@MainActor
 final class ChoiceARideView_ViewModel_Test: XCTestCase {
-
+    private typealias ViewModel = ChoiceARideView.ViewModel
+    
+    private var viewModel: ViewModel?
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        viewModel = .init()
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        viewModel = nil
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    func test_isDisabledButton_isReturningTrueWhenTheChosenDriverIsNil() {
+        guard let viewModel else {
+            XCTFail("View Model was not defined correctly.")
+            return
         }
+        
+        XCTAssertTrue(viewModel.isDisabledButton)
+    }
+    
+    func test_isDisabledButton_isReturningTrueWhenTheRequestingProcessIsRunning() {
+        guard let viewModel else {
+            XCTFail("View Model was not defined correctly.")
+            return
+        }
+        
+        viewModel.isProcessing = true
+        
+        XCTAssertTrue(viewModel.isDisabledButton)
+    }
+    
+    func test_isDisabledButton_isReturningFalseWhenTheChosenDriverIsNotNil() {
+        guard let viewModel else {
+            XCTFail("View Model was not defined correctly.")
+            return
+        }
+        
+        viewModel.chosenDriver = .init(id: 1, name: "Tim Cook")
+        
+        XCTAssertFalse(viewModel.isDisabledButton)
     }
 
+    func test_isDisabledDriverRow_isReturningTrueWhenTheChosenDriverIsNotSameAsTheCurrentDriver() {
+        guard let viewModel else {
+            XCTFail("View Model was not defined correctly.")
+            return
+        }
+        
+        viewModel.chosenDriver = .init(id: 1, name: "Tim Cook")
+        
+        XCTAssertTrue(viewModel.isDisabledDriverRow(driverID: 2))
+    }
+    
+    func test_isDisabledDriverRow_isReturningTrueWhenTheChosenDriverIsTheSameAsTheCurrentDriverAndIsProcessing() {
+        guard let viewModel else {
+            XCTFail("View Model was not defined correctly.")
+            return
+        }
+        
+        viewModel.chosenDriver = .init(id: 1, name: "Tim Cook")
+        viewModel.isProcessing = true
+        
+        XCTAssertTrue(viewModel.isDisabledDriverRow(driverID: 1))
+    }
+    
+    func test_isDisabledDriverRow_isReturningFalseWhenTheChosenDriverIsNilAndIsNotProcessing() {
+        guard let viewModel else {
+            XCTFail("View Model was not defined correctly.")
+            return
+        }
+        
+        XCTAssertFalse(viewModel.isDisabledDriverRow(driverID: 1))
+    }
+    
+    func test_confirmRide_isReturningTheValueCorrectlyAferYourExecutionFinishes() {
+        let expectation = XCTestExpectation(
+            description: "Expected the confirmRide finishes your work."
+        )
+        
+        guard let viewModel else {
+            XCTFail("View Model was not defined correctly.")
+            return
+        }
+        
+        viewModel.chosenDriver = .init(id: 1, name: "Tim Cook")
+        viewModel.chosenRideValue = 1
+        
+        let session = URLSession.mockSession
+        
+        MockURLSession.loadingHandler = {
+            let response = HTTPURLResponse(
+                url: Endpoint.confirm.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            )
+            
+            let data = RideConfirmationResponse.mockData
+            
+            return (response!, data)
+        }
+        
+        Task {
+            viewModel.confirmRide(
+                with: session,
+                customerID: "CT01",
+                origin: "Apple Park",
+                destination: "Apple Infinity Loop",
+                distance: 4,
+                duration: "10 minutes"
+            )
+            
+            try? await Task.sleep(for: .seconds(5))
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation])
+        
+        XCTAssertTrue(viewModel.isSuccessed)
+        XCTAssertFalse(viewModel.isProcessing)
+        XCTAssertNil(viewModel.error)
+    }
+    
+    func test_confirmRide_isReturningTheErrorCorrectlyWhenTheExecutionFail() {
+        let expectation = XCTestExpectation(
+            description: "Expected the confirmRide finishes your work."
+        )
+        
+        guard let viewModel else {
+            XCTFail("View Model was not defined correctly.")
+            return
+        }
+        
+        viewModel.chosenDriver = .init(id: 1, name: "Tim Cook")
+        viewModel.chosenRideValue = 1
+        
+        let session = URLSession.mockSession
+        
+        MockURLSession.loadingHandler = {
+            let response = HTTPURLResponse(
+                url: Endpoint.confirm.url!,
+                statusCode: 400,
+                httpVersion: nil,
+                headerFields: nil
+            )
+            
+            let data = ExecutionError.mockData
+            
+            return (response!, data)
+        }
+        
+        Task {
+            viewModel.confirmRide(
+                with: session,
+                customerID: "CT01",
+                origin: "Apple Park",
+                destination: "Apple Infinity Loop",
+                distance: 4,
+                duration: "10 minutes"
+            )
+            
+            try? await Task.sleep(for: .seconds(5))
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation])
+        
+        XCTAssertFalse(viewModel.isSuccessed)
+        XCTAssertFalse(viewModel.isProcessing)
+        XCTAssertNotNil(viewModel.error)
+    }
 }
