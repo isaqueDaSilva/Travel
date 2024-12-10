@@ -8,7 +8,8 @@
 import Foundation
 
 /// Representation of the response body with all informations for an estimate ride.
-struct RideEstimateResponse: Sendable, Decodable {
+struct RideEstimateResponse: Sendable {
+    let id: UUID
     /// The initial point of the ride.
     let origin: Location
     
@@ -23,6 +24,40 @@ struct RideEstimateResponse: Sendable, Decodable {
     
     /// All drivers options available to execute this ride.
     let options: [Driver]
+    
+    /// Total distance in kilometer
+    var distanceInKM: Int {
+        distance / 1000
+    }
+    
+    init(origin: Location, destination: Location, distance: Int, duration: Int, options: [Driver]) {
+        self.id = UUID()
+        self.origin = origin
+        self.destination = destination
+        self.distance = distance
+        self.duration = duration
+        self.options = options
+    }
+}
+
+extension RideEstimateResponse: Decodable {
+    enum CodingKeys: CodingKey {
+        case origin
+        case destination
+        case distance
+        case duration
+        case options
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = UUID()
+        self.origin = try container.decode(RideEstimateResponse.Location.self, forKey: .origin)
+        self.destination = try container.decode(RideEstimateResponse.Location.self, forKey: .destination)
+        self.distance = try container.decode(Int.self, forKey: .distance)
+        self.duration = try container.decode(Int.self, forKey: .duration)
+        self.options = try container.decode([RideEstimateResponse.Driver].self, forKey: .options)
+    }
 }
 
 extension RideEstimateResponse {
@@ -66,4 +101,14 @@ extension RideEstimateResponse.Driver {
 
 extension RideEstimateResponse {
     typealias Review = Driver.Review
+}
+
+extension RideEstimateResponse: Hashable {
+    static func == (lhs: RideEstimateResponse, rhs: RideEstimateResponse) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.id)
+    }
 }
