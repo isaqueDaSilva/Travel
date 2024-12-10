@@ -16,7 +16,7 @@ extension RequestRideView {
         var initialLocation = ""
         var destination = ""
         var isProcessing = false
-        var ride: RideEstimateResponse?
+        var ride: RideEstimateResponse? = nil
         var error: ExecutionError? = nil
         
         private var isDestinationSameAsInitialLocation: Bool {
@@ -31,7 +31,10 @@ extension RequestRideView {
             isDestinationSameAsInitialLocation || isSomeFieldEmpty || isProcessing
         }
         
-        func makeRideRequest(with urlSession: URLSession = .shared) {
+        func makeRideRequest(
+            with urlSession: URLSession = .shared,
+            completation: @escaping ((RideEstimateResponse) -> Void) = { _ in }
+        ) {
             isProcessing = true
             
             Task {
@@ -49,6 +52,7 @@ extension RequestRideView {
                     await MainActor.run {
                         self.ride = ride
                         self.isProcessing = false
+                        completation(ride)
                     }
                 } catch let error as ExecutionError {
                     await MainActor.run {
