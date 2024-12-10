@@ -21,13 +21,6 @@ final class RequestRideView_ViewModel_Test: XCTestCase {
         viewModel = nil
     }
     
-    private func makeSession() -> URLSession {
-        let config = URLSessionConfiguration.ephemeral
-        config.protocolClasses = [MockURLSession.self]
-        let session = URLSession(configuration: config)
-        return session
-    }
-    
     func test_isDisabled_isReturningTrueWhenSomeFieldIsEmpty() {
         guard let viewModel else {
             XCTFail("View Model was not defined correctly.")
@@ -107,7 +100,7 @@ final class RequestRideView_ViewModel_Test: XCTestCase {
         viewModel.initialLocation = "1 Apple Park Way, Cupertino, CA, 95014"
         viewModel.destination = "1 Infinite Loop, Cupertino, CA 95014"
         
-        let session = self.makeSession()
+        let session = URLSession.mockSession
         
         MockURLSession.loadingHandler = {
             let response = HTTPURLResponse(
@@ -160,7 +153,7 @@ final class RequestRideView_ViewModel_Test: XCTestCase {
         viewModel.initialLocation = "1 Apple Park Way, Cupertino, CA, 95014"
         viewModel.destination = "1 Infinite Loop, Cupertino, CA 95014"
         
-        let session = self.makeSession()
+        let session = URLSession.mockSession
         
         MockURLSession.loadingHandler = {
             let response = HTTPURLResponse(
