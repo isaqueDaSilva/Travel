@@ -1,5 +1,5 @@
 //
-//  CustomerRideHistoric.swift
+//  CustomerRideHistory.swift
 //  Travel
 //
 //  Created by Isaque da Silva on 12/6/24.
@@ -8,7 +8,7 @@
 import Foundation
 
 /// Representation of the ride's history made by a customer.
-struct CustomerRideHistoric: Sendable, Decodable {
+struct CustomerRideHistory: Sendable, Decodable {
     /// Customer's unique identifier.
     let customerID: String
     
@@ -16,7 +16,7 @@ struct CustomerRideHistoric: Sendable, Decodable {
     let rides: [Ride]
 }
 
-extension CustomerRideHistoric {
+extension CustomerRideHistory {
     /// Representation of a single ride made by a user.
     struct Ride: Sendable, Decodable {
         /// Ride's unique identifier.
