@@ -9,9 +9,10 @@ import SwiftUI
 
 struct RequestRideView: View {
     @State private var viewModel = ViewModel()
+    @State private var path = [RideEstimateResponse]()
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Form {
                 Section("Direções") {
                     HStack {
@@ -20,13 +21,25 @@ struct RequestRideView: View {
                         directionsInserterComponent
                     }
                 }
+                .listRowBackground(Color.secondary.opacity(0.15))
                 
                 customerIdentifierInserterComponent
+                    .listRowBackground(Color.secondary.opacity(0.15))
                 
                 makeRequestButtonComponent
             }
             .navigationTitle("Onde Vamos?")
+            .scrollContentBackground(.hidden)
             .errorAlert(error: $viewModel.error) { }
+            .navigationDestination(for: RideEstimateResponse.self) { rideEstimated in
+                ChoiceARideView(
+                    path: $path,
+                    rideEstimated: rideEstimated,
+                    customerID: viewModel.customerID,
+                    origin: viewModel.initialLocation,
+                    destination: viewModel.destination
+                )
+            }
         }
     }
 }
@@ -87,7 +100,9 @@ extension RequestRideView {
             title: "Escolher Motorista",
             isDisabled: viewModel.isDisabled,
             action: {
-                viewModel.makeRideRequest()
+                viewModel.makeRideRequest { ride in
+                    path.append(ride)
+                }
             }
         )
         .listRowBackground(Color.clear)
