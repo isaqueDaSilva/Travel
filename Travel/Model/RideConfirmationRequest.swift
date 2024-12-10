@@ -19,7 +19,7 @@ struct RideConfirmationRequest: Sendable, Encodable {
     let destination: String
     
     /// Total distance of the ride.
-    let distance: Double
+    let distance: Int
     
     /// Total duration of the ride.
     let duration: String
