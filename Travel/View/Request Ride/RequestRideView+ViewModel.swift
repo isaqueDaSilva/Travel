@@ -33,7 +33,7 @@ extension RequestRideView {
         
         func makeRideRequest(
             with urlSession: URLSession = .shared,
-            completation: @escaping ((RideEstimateResponse) -> Void) = { _ in }
+            completation: @escaping (() -> Void) = { }
         ) {
             isProcessing = true
             
@@ -52,7 +52,7 @@ extension RequestRideView {
                     await MainActor.run {
                         self.ride = ride
                         self.isProcessing = false
-                        completation(ride)
+                        completation()
                     }
                 } catch let error as ExecutionError {
                     await MainActor.run {
