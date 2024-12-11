@@ -14,8 +14,7 @@ extension View {
     ///   - action: A ViewBuilder returning the alert’s actions to be executed when an error will thrown.
     @ViewBuilder
     func errorAlert(
-        error: Binding<ExecutionError?>,
-        @ViewBuilder action: () -> some View
+        error: Binding<ExecutionError?>
     ) -> some View {
         self
             .alert(
@@ -28,9 +27,7 @@ extension View {
                 }, set: { _ in
                     // When the user taps some button of the alert the error state will be setup back as nil.
                     error.wrappedValue = nil
-                })) {
-                    action()
-                } message: {
+                })) { } message: {
                     // Displays a message when the error description will be not nil.
                     if ((error.wrappedValue?.errorDescription.isEmpty) != nil) {
                         Text(error.wrappedValue?.errorDescription ?? "Descrição indisponiivel no momento")
