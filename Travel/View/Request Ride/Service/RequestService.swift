@@ -9,9 +9,7 @@ import Foundation
 
 extension RequestRideView {
     /// Defines a Service type to process and send to the server a ride request made by user.
-    enum RequestService: Service {
-        typealias Response = RideEstimateResponse
-        
+    enum RequestService {
         /// Processes the ride's request by user.
         static func makeRequest(
             with urlSession: URLSession,

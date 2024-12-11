@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RequestRideView: View {
     @State private var viewModel = ViewModel()
-    @State private var path = [RideEstimateResponse]()
+    @State private var path = [Int]()
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -30,15 +30,19 @@ struct RequestRideView: View {
             }
             .navigationTitle("Onde Vamos?")
             .scrollContentBackground(.hidden)
-            .errorAlert(error: $viewModel.error) { }
-            .navigationDestination(for: RideEstimateResponse.self) { rideEstimated in
-                ChoiceARideView(
-                    path: $path,
-                    rideEstimated: rideEstimated,
-                    customerID: viewModel.customerID,
-                    origin: viewModel.initialLocation,
-                    destination: viewModel.destination
-                )
+            .errorAlert(error: $viewModel.error)
+            .navigationDestination(for: Int.self) { _ in
+                if path.last == 1 {
+                    ChoiceARideView(
+                        path: $path,
+                        rideEstimated: viewModel.ride!,
+                        customerID: viewModel.customerID,
+                        origin: viewModel.initialLocation,
+                        destination: viewModel.destination
+                    )
+                } else if path.last == 2 {
+                    HistoryView(path: $path)
+                }
             }
         }
     }
@@ -100,8 +104,8 @@ extension RequestRideView {
             title: "Escolher Motorista",
             isDisabled: viewModel.isDisabled,
             action: {
-                viewModel.makeRideRequest { ride in
-                    path.append(ride)
+                viewModel.makeRideRequest {
+                    path.append(1)
                 }
             }
         )
