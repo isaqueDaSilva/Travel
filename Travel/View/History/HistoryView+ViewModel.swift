@@ -36,7 +36,7 @@ extension HistoryView {
                     }
                     
                     var request = URLRequest(url: url)
-                    request.setHTTPMethod(.patch)
+                    request.setHTTPMethod(.get)
                     
                     guard let (responseData, response) = try? await urlSession.data(for: request) else {
                         throw ExecutionError.executionError
