@@ -14,13 +14,18 @@ struct RideHistoyRow: View {
         GroupBox {
             VStack {
                 RideInformationContent(
+                    title: "Origem",
+                    description: "\(rideInformation.origin)"
+                )
+                
+                RideInformationContent(
                     title: "Data da Viagem",
                     description: "\(rideInformation.date, format: .dateTime)"
                 )
                 
                 RideInformationContent(
                     title: "Distância",
-                    description: "\(rideInformation.distance, format: .number) KM"
+                    description: "≈ \(rideInformation.approximateDistance, format: .number) KM"
                 )
                 
                 RideInformationContent(
@@ -40,16 +45,7 @@ struct RideHistoyRow: View {
             }
         } label: {
             VStack(alignment: .leading) {
-                HStack {
-                    Text(rideInformation.origin)
-                    
-                    ForEach(1...3, id: \.self) { _ in
-                        RoundedRectangle(cornerRadius: 10)
-                            .frame(width: 5, height: 5)
-                    }
-                    
-                    Text(rideInformation.destination)
-                }
+                Text(rideInformation.destination)
                 
                 Rectangle()
                     .frame(height: 1)
