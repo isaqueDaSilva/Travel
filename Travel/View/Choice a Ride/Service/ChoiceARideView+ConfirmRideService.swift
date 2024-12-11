@@ -8,9 +8,7 @@
 import Foundation
 
 extension ChoiceARideView {
-    enum ConfirmRideService: Service {
-        typealias Response = RideConfirmationResponse
-        
+    enum ConfirmRideService {
         static func makeRequest(with urlSession: URLSession, encodedData: Data) async throws(ExecutionError) -> RideConfirmationResponse {
             guard let url = Endpoint.confirm.url else {
                 throw .badURL
