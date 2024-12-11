@@ -121,10 +121,9 @@ final class ChoiceARideView_ViewModel_Test: XCTestCase {
                 destination: "Apple Infinity Loop",
                 distance: 4,
                 duration: "10 minutes"
-            )
-            
-            try? await Task.sleep(for: .seconds(5))
-            expectation.fulfill()
+            ) {
+                expectation.fulfill()
+            }
         }
         
         wait(for: [expectation])
@@ -170,10 +169,9 @@ final class ChoiceARideView_ViewModel_Test: XCTestCase {
                 destination: "Apple Infinity Loop",
                 distance: 4,
                 duration: "10 minutes"
-            )
-            
-            try? await Task.sleep(for: .seconds(5))
-            expectation.fulfill()
+            ) {
+                expectation.fulfill()
+            }
         }
         
         wait(for: [expectation])
@@ -181,5 +179,7 @@ final class ChoiceARideView_ViewModel_Test: XCTestCase {
         XCTAssertFalse(viewModel.isSuccessed)
         XCTAssertFalse(viewModel.isProcessing)
         XCTAssertNotNil(viewModel.error)
+        XCTAssertEqual(viewModel.error?.errorCode, "INVALID_ID")
+        XCTAssertEqual(viewModel.error?.errorDescription, "Invalid client id")
     }
 }
