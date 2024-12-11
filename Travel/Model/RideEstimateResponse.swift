@@ -5,6 +5,7 @@
 //  Created by Isaque da Silva on 12/6/24.
 //
 
+import CoreLocation
 import Foundation
 
 /// Representation of the response body with all informations for an estimate ride.
@@ -25,18 +26,29 @@ struct RideEstimateResponse: Sendable {
     /// All drivers options available to execute this ride.
     let options: [Driver]
     
+    /// The route of the ride.
+    let routeResponse: RouteResponse
+    
     /// Total distance in kilometer
     var distanceInKM: Int {
         distance / 1000
     }
     
-    init(origin: Location, destination: Location, distance: Int, duration: Int, options: [Driver]) {
+    init(
+        origin: Location,
+        destination: Location,
+        distance: Int,
+        duration: Int,
+        options: [Driver],
+        routeResponse: RouteResponse
+    ) {
         self.id = UUID()
         self.origin = origin
         self.destination = destination
         self.distance = distance
         self.duration = duration
         self.options = options
+        self.routeResponse = routeResponse
     }
 }
 
@@ -47,24 +59,18 @@ extension RideEstimateResponse: Decodable {
         case distance
         case duration
         case options
+        case routeResponse
     }
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = UUID()
-        self.origin = try container.decode(RideEstimateResponse.Location.self, forKey: .origin)
-        self.destination = try container.decode(RideEstimateResponse.Location.self, forKey: .destination)
+        self.origin = try container.decode(Location.self, forKey: .origin)
+        self.destination = try container.decode(Location.self, forKey: .destination)
         self.distance = try container.decode(Int.self, forKey: .distance)
         self.duration = try container.decode(Int.self, forKey: .duration)
         self.options = try container.decode([RideEstimateResponse.Driver].self, forKey: .options)
-    }
-}
-
-extension RideEstimateResponse {
-    /// Representation of some location in the world by latitude and longitude values.
-    struct Location: Sendable, Decodable {
-        let latitude: Double
-        let longitude: Double
+        self.routeResponse = try container.decode(RouteResponse.self, forKey: .routeResponse)
     }
 }
 
