@@ -45,7 +45,8 @@ extension ChoiceARideView {
             origin: String,
             destination: String,
             distance: Int,
-            duration: String
+            duration: String,
+            completation: @escaping () -> Void
         ) {
             isProcessing = true
             
@@ -71,6 +72,7 @@ extension ChoiceARideView {
                     await MainActor.run {
                         self.isSuccessed = confirmationStatus.isSuccessed
                         self.isProcessing = false
+                        completation()
                     }
                 } catch let error as ExecutionError {
                     await MainActor.run {
