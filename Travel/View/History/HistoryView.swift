@@ -8,42 +8,17 @@
 import SwiftUI
 
 struct HistoryView: View {
-    @State private var customID = ""
-    @State private var selectedDriver = 1
-    @State private var isProcessing = false
-    @State private var rideHistory = CustomerRideHistory(
-        customerID: "CT01",
-        rides: [
-            .init(
-                id: 1,
-                date: .now,
-                origin: "Apple Park",
-                destination: "Apple Infinity Loop",
-                distance: 4,
-                duration: "7:00",
-                driver: .init(id: 1, name: "Tim Cook"),
-                value: 10
-            ),
-            .init(
-                id: 2,
-                date: .now,
-                origin: "Apple Infinity Loop",
-                destination: "Apple Park",
-                distance: 4,
-                duration: "12:00",
-                driver: .init(id: 1, name: "John Ternus"),
-                value: 15
-            )
-        ]
-    )
+    @Binding var path: [Int]
+    
+    @State private var viewModel = ViewModel()
     
     var body: some View {
         Form {
             Section {
-                TextField("Insira seu id aqui...", text: $customID)
+                TextField("Insira seu id aqui...", text: $viewModel.customID)
                 Picker(
                     "Selecione o ID do motorista",
-                    selection: $selectedDriver
+                    selection: $viewModel.selectedDriver
                 ) {
                     ForEach(1...3, id: \.self) { driverID in
                         Text(driverID, format: .number)
@@ -53,30 +28,41 @@ struct HistoryView: View {
             .listRowBackground(Color.secondary.opacity(0.15))
             
             ActionButton(
-                isProcessing: $isProcessing,
+                isProcessing: $viewModel.isProcessing,
                 title: "Pesquisar",
-                isDisabled: false
+                isDisabled: viewModel.isDisabled
             ) {
-                
+                viewModel.getHistory()
             }
             .listRowBackground(Color.clear)
             .listRowInsets(EdgeInsets())
             
-            Section("Viagens") {
-                ForEach(rideHistory.rides, id: \.id) { ride in
-                    RideHistoyRow(rideInformation: ride)
-                        .padding(.bottom)
+            if let rideHistory = viewModel.rideHistory {
+                Section("Viagens") {
+                    ForEach(rideHistory.rides, id: \.internalID) { ride in
+                        RideHistoyRow(rideInformation: ride)
+                            .padding(.bottom)
+                    }
+                    .listRowInsets(EdgeInsets())
                 }
-                .listRowInsets(EdgeInsets())
             }
         }
         .scrollContentBackground(.hidden)
         .navigationTitle("Histórico")
+        .navigationBarBackButtonHidden()
+        .errorAlert(error: $viewModel.error)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton(isDisabled: path.isEmpty) {
+                    path.removeAll()
+                }
+            }
+        }
     }
 }
 
 #Preview {
     NavigationStack {
-        HistoryView()
+        HistoryView(path: .constant([]))
     }
 }
