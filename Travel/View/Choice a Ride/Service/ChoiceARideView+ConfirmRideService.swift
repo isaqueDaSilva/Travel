@@ -10,20 +10,12 @@ import Foundation
 extension ChoiceARideView {
     enum ConfirmRideService {
         static func makeRequest(with urlSession: URLSession, encodedData: Data) async throws(ExecutionError) -> RideConfirmationResponse {
-            guard let url = Endpoint.confirm.url else {
-                throw .badURL
-            }
-            
-            var request = URLRequest(url: url)
-            request.setHTTPMethod(.patch)
-            
-            guard let (responseData, response) = try? await urlSession.upload(for: request, from: encodedData) else {
-                throw .executionError
-            }
-            
-            guard let response = response as? HTTPURLResponse else {
-                throw .unknownError
-            }
+            let (responseData, response) = try await NetworkHandler.makeRequest(
+                endpoint: .confirm,
+                httpMethod: .patch,
+                urlSessionType: .upload(encodedData),
+                urlSession: urlSession
+            )
             
             switch response.statusCode {
             case 200:
