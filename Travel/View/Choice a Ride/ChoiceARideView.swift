@@ -228,20 +228,6 @@ extension ChoiceARideView {
                 routeResponse: .init(routes: [
                     .init(legs: [
                         .init(
-                            distanceMeters: 7000,
-                            duration: "600s",
-                            startLocation: .init(
-                                latLng: .init(
-                                    latitude: 37.334606,
-                                    longitude: -122.009102
-                                )
-                            ),
-                            endLocation: .init(
-                                latLng: .init(
-                                    latitude: 37.33182,
-                                    longitude: -122.03118
-                                )
-                            ),
                             polyline: .init(
                                 encodedPolyline:  "dwynCtj{{GdCwDjCwC^_@PSHKV[^_@bAeALKVYlBqBz@aAr@y@`@a@pB{B|@_ALODCXY@O@M?QIa@RcDJuAc@Ce@EOCIAEAKCICGCGEECIEGECCQOqBsBqBwBo@m@CEIKq@m@mAeAIGa@e@GGGEa@a@oD_Ew@w@i@k@s@s@s@u@qAuAQQCAMOg@g@oCmCKM]_@MMKKCCEGSSUUY[OS]]KKq@u@OOY[YUc@g@AAOMQSCCc@g@CCGGYY[]i@i@_@a@k@i@Y_@DGb@k@T[V]dAsAb@e@FGjAmA@CjBwBo@q@CCo@q@k@o@ECSUGGKKm@t@CDIHUXCD"
                             )

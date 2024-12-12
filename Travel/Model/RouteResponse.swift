@@ -44,17 +44,7 @@ extension RouteResponse {
 
 extension RouteResponse.Route {
     struct Legs: Decodable {
-        let distanceMeters: Int
-        let duration: String
-        let startLocation: StepLocation
-        let endLocation: StepLocation
         let polyline: Polyline
-    }
-}
-
-extension RouteResponse.Legs {
-    struct StepLocation: Decodable {
-        let latLng: Location
     }
 }
 
