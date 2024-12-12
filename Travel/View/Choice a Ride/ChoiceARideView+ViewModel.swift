@@ -46,7 +46,7 @@ extension ChoiceARideView {
             destination: String,
             distance: Int,
             duration: String,
-            completation: @escaping () -> Void
+            completation: @escaping () -> Void = { }
         ) {
             isProcessing = true
             
