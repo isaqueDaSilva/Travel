@@ -1,12 +1,9 @@
 # Table of Contents
 1. [Getting started](#getting-started)
 2. [Structure](#structure)
-6. [Tests](#running-the-tests)
-7. [Deployment](#deployment)
-8. [Dependencies](#dependencies)
-9. [Task board](#task-board)
-10. [Design](#design)
-11. [API](#api)
+3. [Tests](#running-the-tests)
+4. [Design](#design)
+5. [API](#api)
 
 # Travel
 Um projeto conceito iOS, desenvolvido em Swift e SwiftUI, com foco em conectar motoristas a usuários que desejam uma corrida. 
