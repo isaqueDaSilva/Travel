@@ -11,10 +11,10 @@ Um projeto conceito iOS, desenvolvido em Swift e SwiftUI, com foco em conectar m
 # Getting started
 Antes de começar, siga os passos abaixo:
 <p>
-1. Verifique se você está usando o Xcode 16, com o simulador no iOS 18<br>
-2. Baixe este repositório.<br>
-3. Abra o projeto.<br>
-4. Compile e execute o app.<br>
+* Verifique se você está usando o Xcode 16, com o simulador no iOS 18<br>
+* Baixe este repositório.<br>
+* Abra o projeto.<br>
+* Compile e execute o app.<br>
 
 Após a compilação, e o app estando executando normalmente, você deve ver um formulário para inserir as informações do trajeto e sua identificação.<br>
 
@@ -35,4 +35,4 @@ O App foi pensado para ser simples, intuitivo e familiar para os usuários do iO
 Além de uso de cores padrões em toda UI para evitar fadiga visual e dificuldade ao encontrar algum componente.
 
 # API 
-* O app faz uma requisição a uma API no qual é responsável por fazer o calculo da rota das viagens, confirmação de viagem, e obter o histórico de viagens do passageiro com um determinado motorista.
+O app faz uma requisição a uma API no qual é responsável por fazer o calculo da rota das viagens, confirmação de viagem, e obter o histórico de viagens do passageiro com um determinado motorista.
