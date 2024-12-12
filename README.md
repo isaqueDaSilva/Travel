@@ -1,7 +1,7 @@
 # Table of Contents
 1. [Getting started](#getting-started)
 2. [Structure](#structure)
-3. [Tests](#running-the-tests)
+3. [Tests](#tests)
 4. [Design](#design)
 5. [API](#api)
 
