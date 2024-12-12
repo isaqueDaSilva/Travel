@@ -113,17 +113,15 @@ final class ChoiceARideView_ViewModel_Test: XCTestCase {
             return (response!, data)
         }
         
-        Task {
-            viewModel.confirmRide(
-                with: session,
-                customerID: "CT01",
-                origin: "Apple Park",
-                destination: "Apple Infinity Loop",
-                distance: 4,
-                duration: "10 minutes"
-            ) {
-                expectation.fulfill()
-            }
+        viewModel.confirmRide(
+            with: session,
+            customerID: "CT01",
+            origin: "Apple Park",
+            destination: "Apple Infinity Loop",
+            distance: 4,
+            duration: "10 minutes"
+        ) {
+            expectation.fulfill()
         }
         
         wait(for: [expectation])
@@ -169,9 +167,11 @@ final class ChoiceARideView_ViewModel_Test: XCTestCase {
                 destination: "Apple Infinity Loop",
                 distance: 4,
                 duration: "10 minutes"
-            ) {
-                expectation.fulfill()
-            }
+            )
+            
+            try? await Task.sleep(for: .seconds(5))
+            
+            expectation.fulfill()
         }
         
         wait(for: [expectation])
