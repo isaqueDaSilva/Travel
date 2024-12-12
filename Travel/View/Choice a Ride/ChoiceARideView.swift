@@ -26,7 +26,7 @@ struct ChoiceARideView: View {
                 let startOffset = proxy.size.height * 0.65
                 
                 Map {
-                    ForEach(rideEstimated.routeResponse.routes, id: \.id) { route in
+                    ForEach(rideEstimated.routeResponse.routes ?? [], id: \.id) { route in
                         
                         if !route.coordinates.isEmpty {
                             MapPolyline(coordinates: route.coordinates)
@@ -180,7 +180,7 @@ extension ChoiceARideView {
                     Group {
                         if rideEstimated.options.isEmpty {
                             emptyDriverIndicator
-                                .containerRelativeFrame(.vertical, alignment: .center)
+
                         } else {
                             driverList
                         }
