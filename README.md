@@ -9,8 +9,6 @@
 Um projeto conceito iOS, desenvolvido em Swift e SwiftUI, com foco em conectar motoristas a usuários que desejam uma corrida. 
 
 # Getting started
-Antes de começar, siga os passos abaixo:
-<p>
 * Verifique se você está usando o Xcode 16, com o simulador no iOS 18<br>
 * Baixe este repositório.<br>
 * Abra o projeto.<br>
