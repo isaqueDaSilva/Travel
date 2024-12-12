@@ -27,8 +27,23 @@ struct ChoiceARideView: View {
                 
                 Map {
                     ForEach(rideEstimated.routeResponse.routes, id: \.id) { route in
-                        MapPolyline(coordinates: route.coordinates)
-                            .stroke(.blue, lineWidth: 10)
+                        
+                        if !route.coordinates.isEmpty {
+                            MapPolyline(coordinates: route.coordinates)
+                                .stroke((route.coordinates.first != nil) ? .blue : .blue.opacity(0.5), lineWidth: 10)
+                            
+                            if let initialLocation = route.coordinates.first {
+                                Marker(coordinate: initialLocation) {
+                                    Image(systemName: "star.fill")
+                                }
+                            }
+                            
+                            if let destination = route.coordinates.last {
+                                Marker(coordinate: destination) {
+                                    Image(systemName: "mappin")
+                                }
+                            }
+                        }
                     }
                 }
                 
@@ -50,13 +65,15 @@ struct ChoiceARideView: View {
                                 }
                             }
                             .onEnded { _ in
-                                if currentOffeset < -120 {
-                                    endingOffsetY = -startOffset
-                                } else if endingOffsetY != 0 && currentOffeset > 120 {
-                                    endingOffsetY = 0
+                                withAnimation {
+                                    if currentOffeset < -120 {
+                                        endingOffsetY = -startOffset
+                                    } else if endingOffsetY != 0 && currentOffeset > 120 {
+                                        endingOffsetY = 0
+                                    }
+                                    
+                                    currentOffeset = 0
                                 }
-                                
-                                currentOffeset = 0
                             }
                     )
             }
