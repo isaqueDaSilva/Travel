@@ -29,22 +29,12 @@ extension HistoryView {
             
             Task {
                 do {
-                    let url = Endpoint.history(customID, "\(selectedDriver)").url
-                    
-                    guard let url else {
-                        throw ExecutionError.badURL
-                    }
-                    
-                    var request = URLRequest(url: url)
-                    request.setHTTPMethod(.get)
-                    
-                    guard let (responseData, response) = try? await urlSession.data(for: request) else {
-                        throw ExecutionError.executionError
-                    }
-                    
-                    guard let response = response as? HTTPURLResponse else {
-                        throw ExecutionError.unknownError
-                    }
+                    let (responseData, response) = try await NetworkHandler.makeRequest(
+                        endpoint: .history(customID, "\(selectedDriver)"),
+                        httpMethod: .get,
+                        urlSessionType: .getData,
+                        urlSession: urlSession
+                    )
                     
                     switch response.statusCode {
                     case 200:

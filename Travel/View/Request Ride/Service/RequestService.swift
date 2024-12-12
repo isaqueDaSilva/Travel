@@ -15,20 +15,12 @@ extension RequestRideView {
             with urlSession: URLSession,
             encodedData: Data
         ) async throws(ExecutionError) -> RideEstimateResponse {
-            guard let url = Endpoint.estimate.url else {
-                throw .badURL
-            }
-            
-            var request = URLRequest(url: url)
-            request.setHTTPMethod(.post)
-            
-            guard let (responseData, response) = try? await urlSession.upload(for: request, from: encodedData) else {
-                throw .executionError
-            }
-            
-            guard let response = response as? HTTPURLResponse else {
-                throw .unknownError
-            }
+            let (responseData, response) = try await NetworkHandler.makeRequest(
+                endpoint: .estimate,
+                httpMethod: .post,
+                urlSessionType: .upload(encodedData),
+                urlSession: urlSession
+            )
             
             switch response.statusCode {
             case 200:
