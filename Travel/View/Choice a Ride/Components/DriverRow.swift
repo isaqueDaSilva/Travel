@@ -78,6 +78,7 @@ extension DriverRow {
             Text("\(vehicle)")
                 .font(.headline)
         }
+        .multilineTextAlignment(.trailing)
         .foregroundStyle(.secondary)
         .frame(maxWidth: .infinity, alignment: .trailing)
     }
