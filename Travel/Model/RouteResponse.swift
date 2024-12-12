@@ -8,15 +8,26 @@
 import CoreLocation
 import Foundation
 
-struct RouteResponse: Decodable {
+struct RouteResponse: Sendable {
     typealias Legs = Route.Legs
     typealias Polyline = Legs.Polyline
  
-    let routes: [Route]
+    let routes: [Route]?
+}
+
+extension RouteResponse: Decodable {
+    enum CodingKeys: CodingKey {
+        case routes
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.routes = try container.decodeIfPresent([RouteResponse.Route].self, forKey: .routes)
+    }
 }
 
 extension RouteResponse {
-    struct Route: Decodable {
+    struct Route: Sendable, Decodable {
         let id: UUID
         let legs: [Legs]
         
@@ -30,9 +41,9 @@ extension RouteResponse {
         }
         
         init(from decoder: any Decoder) throws {
-            let container: KeyedDecodingContainer<RouteResponse.Route.CodingKeys> = try decoder.container(keyedBy: RouteResponse.Route.CodingKeys.self)
+            let container: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
             self.id = UUID()
-            self.legs = try container.decode([RouteResponse.Route.Legs].self, forKey: RouteResponse.Route.CodingKeys.legs)
+            self.legs = try container.decode([Legs].self, forKey: RouteResponse.Route.CodingKeys.legs)
         }
         
         init(legs: [Legs]) {
@@ -43,13 +54,13 @@ extension RouteResponse {
 }
 
 extension RouteResponse.Route {
-    struct Legs: Decodable {
+    struct Legs: Sendable, Decodable {
         let polyline: Polyline
     }
 }
 
 extension RouteResponse.Legs {
-    struct Polyline: Decodable {
+    struct Polyline: Sendable, Decodable {
         let encodedPolyline: String
     }
 }
