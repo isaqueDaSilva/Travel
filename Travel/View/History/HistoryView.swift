@@ -25,6 +25,7 @@ struct HistoryView: View {
                     }
                 }
             }
+            .listRowBackground(Color.secondary.opacity(0.15))
             
             ActionButton(
                 isProcessing: $viewModel.isProcessing,
@@ -51,11 +52,13 @@ struct HistoryView: View {
                                     .padding(.bottom)
                             }
                             .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
                         }
                     }
                 }
             }
         }
+        .scrollContentBackground(.hidden)
         .navigationTitle("Histórico")
         .navigationBarBackButtonHidden()
         .errorAlert(error: $viewModel.error)
