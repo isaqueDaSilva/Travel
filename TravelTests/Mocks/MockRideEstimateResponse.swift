@@ -34,7 +34,20 @@ extension RideEstimateResponse {
           },
           "value": 10.0
         }
-    ]
+    ],
+    "routeResponse": {
+        "routes": [
+            {
+                "legs": [
+                    {
+                        "polyline": {
+                            "encodedPolyline": "_p~iF~ps|U_ulLnnqC_mqNvxq`@"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
 }
 """
         
