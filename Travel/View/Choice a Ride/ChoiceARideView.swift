@@ -27,8 +27,8 @@ struct ChoiceARideView: View {
                 
                 Map {
                     ForEach(rideEstimated.routeResponse.routes, id: \.id) { route in
-                        MapPolygon(coordinates: route.coordinates)
-                            .stroke(.blue, lineWidth: 4)
+                        MapPolyline(coordinates: route.coordinates)
+                            .stroke(.blue, lineWidth: 10)
                     }
                 }
                 

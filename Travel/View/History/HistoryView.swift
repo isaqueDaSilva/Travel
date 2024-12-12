@@ -25,7 +25,6 @@ struct HistoryView: View {
                     }
                 }
             }
-            .listRowBackground(Color.secondary.opacity(0.15))
             
             ActionButton(
                 isProcessing: $viewModel.isProcessing,
@@ -38,16 +37,25 @@ struct HistoryView: View {
             .listRowInsets(EdgeInsets())
             
             if let rideHistory = viewModel.rideHistory {
-                Section("Viagens") {
-                    ForEach(rideHistory.rides, id: \.internalID) { ride in
-                        RideHistoyRow(rideInformation: ride)
-                            .padding(.bottom)
+                Group {
+                    if rideHistory.rides.isEmpty {
+                        ContentUnavailableView(
+                            "Nenhuma viagem disponível",
+                            systemImage: "mappin.slash",
+                            description: Text("Não encontramos nenhuma viagem sua com este motorista.")
+                        )
+                    } else {
+                        Section("Viagens") {
+                            ForEach(rideHistory.rides, id: \.internalID) { ride in
+                                RideHistoyRow(rideInformation: ride)
+                                    .padding(.bottom)
+                            }
+                            .listRowInsets(EdgeInsets())
+                        }
                     }
-                    .listRowInsets(EdgeInsets())
                 }
             }
         }
-        .scrollContentBackground(.hidden)
         .navigationTitle("Histórico")
         .navigationBarBackButtonHidden()
         .errorAlert(error: $viewModel.error)

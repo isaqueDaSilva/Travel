@@ -21,15 +21,12 @@ struct RequestRideView: View {
                         directionsInserterComponent
                     }
                 }
-                .listRowBackground(Color.secondary.opacity(0.15))
                 
                 customerIdentifierInserterComponent
-                    .listRowBackground(Color.secondary.opacity(0.15))
                 
                 makeRequestButtonComponent
             }
             .navigationTitle("Onde Vamos?")
-            .scrollContentBackground(.hidden)
             .errorAlert(error: $viewModel.error)
             .navigationDestination(for: Int.self) { _ in
                 if path.last == 1 {

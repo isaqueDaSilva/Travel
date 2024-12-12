@@ -66,56 +66,57 @@ extension RouteResponse.Legs {
 
 extension RouteResponse.Polyline {
     var coordinates: [CLLocationCoordinate2D] {
-        // Stores the coordinates to display a route in the Map View
         var coordinates: [CLLocationCoordinate2D] = []
         
-        var currentIndex = encodedPolyline.startIndex
-        let endIndex = encodedPolyline.endIndex
+        var index = encodedPolyline.startIndex
+        let length = encodedPolyline.count
         
         var latitude: Int32 = 0
         var longitude: Int32 = 0
         
-        while currentIndex < endIndex {
-            let (latChange, nextIndex) = decodeSingleCoordinate(startingAt: currentIndex)
+        while index < encodedPolyline.endIndex {
+            // Decodificar Latitude
+            let latChange = decodeValue(currentIndex: &index, length: length)
             latitude += latChange
-            currentIndex = nextIndex
             
-            let (lngChange, newIndex) = decodeSingleCoordinate(startingAt: currentIndex)
+            // Decodificar Longitude
+            let lngChange = decodeValue(currentIndex: &index, length: length)
             longitude += lngChange
-            currentIndex = newIndex
             
-            // Given the value and dividing by 100000
-            // to get the latititude and logitude values.
-            let lat = Double(latitude) / 1E5
-            let lng = Double(longitude) / 1E5
+            let finalLatitude = Double(latitude) / 1e5
+            let finalLongitude = Double(longitude) / 1e5
             
-            coordinates.append(.init(latitude: lat, longitude: lng))
+            coordinates.append(.init(latitude: finalLatitude, longitude: finalLongitude))
         }
         
         return coordinates
     }
     
-    private func decodeSingleCoordinate(startingAt index: String.Index) -> (Int32, String.Index) {
+    private func decodeValue(currentIndex: inout String.Index, length: Int) -> Int32 {
         var result: Int32 = 0
         var shift: Int32 = 0
-        var currentIndex = index
-        
-        while currentIndex < encodedPolyline.endIndex {
-            let char = encodedPolyline[currentIndex]
-            let value = Int32(char.asciiValue! - 63)
-            let bit = value & 0x1F
-            result |= (bit << shift)
+        var byte: Int32 = 0
+
+        repeat {
+            // Pega o caractere atual e avança o índice
+            let character = encodedPolyline[currentIndex]
+            encodedPolyline.formIndex(after: &currentIndex)
+            
+            // Converte o caractere para o valor correspondente
+            byte = Int32(character.asciiValue!) - 63
+            
+            // Remove o bit de sinal extra e ajusta para posição
+            result |= (byte & 0x1F) << shift
             shift += 5
-            
-            currentIndex = encodedPolyline.index(after: currentIndex)
-            
-            if value & 0x20 == 0 {
-                break
-            }
+        } while byte >= 0x20 // Continua enquanto o bit mais significativo for 1
+
+        // Verifica se o valor é negativo (complemento de dois)
+        if (result & 1) == 1 {
+            result = ~(result >> 1) // Negativo
+        } else {
+            result >>= 1 // Positivo
         }
         
-        let finalResult = (result & 1) != 0 ? ~(result >> 1) : (result >> 1)
-        
-        return (finalResult, currentIndex)
+        return result
     }
 }
