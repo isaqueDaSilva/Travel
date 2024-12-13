@@ -11,7 +11,8 @@ import XCTest
 final class PolylineDecodingAlgorithm_Test: XCTestCase {
     
     func test_isPolylineDecodingAlgorithmDecodingAEncodedPolylineCorrectly() {
-        // Source: https://developers.google.com/maps/documentation/utilities/polylinealgorithm?hl=pt-br#example
+        // Source for the Values:
+        // https://developers.google.com/maps/documentation/utilities/polylinealgorithm?hl=pt-br#example
         
         let encodedPolyline = "_p~iF~ps|U_ulLnnqC_mqNvxq`@"
         let polyline = RouteResponse.Legs.Polyline(encodedPolyline: encodedPolyline)

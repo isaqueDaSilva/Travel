@@ -8,7 +8,7 @@
 import Foundation
 
 /// Representation of a error when some failure occur processing a request.
-struct ExecutionError: Sendable, Decodable, Error {
+struct ExecutionError: Sendable, Error {
     /// User-friendly error title.
     let title: String
     
@@ -18,6 +18,15 @@ struct ExecutionError: Sendable, Decodable, Error {
     /// Description of what's failed when a request was processed.
     let errorDescription: String
     
+    init(title: String, errorDescription: String) {
+        self.title = title
+        self.errorCode = title
+        self.errorDescription = errorDescription
+    }
+}
+
+// MARK: - Decoding -
+extension ExecutionError: Decodable {
     enum CodingKeys: String, CodingKey {
         case errorCode = "error_code"
         case errorDescription = "error_description"
@@ -25,15 +34,9 @@ struct ExecutionError: Sendable, Decodable, Error {
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.title = ""
+        self.title = "Falha no processo."
         self.errorCode = try container.decode(String.self, forKey: .errorCode)
         self.errorDescription = try container.decode(String.self, forKey: .errorDescription)
-    }
-    
-    init(title: String, errorDescription: String) {
-        self.title = title
-        self.errorCode = title
-        self.errorDescription = errorDescription
     }
 }
 

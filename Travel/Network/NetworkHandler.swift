@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// A default Network handler for API calls.
 enum NetworkHandler {
     static func makeRequest(
         endpoint: Endpoint,

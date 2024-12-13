@@ -53,6 +53,64 @@ final class ChoiceARideView_ViewModel_Test: XCTestCase {
         XCTAssertFalse(viewModel.isDisabledButton)
     }
 
+    func test_isValidDistance_isRetuningFalseWhenTheDistanceIsNotAcceptByDriver() {
+        guard let viewModel else {
+            XCTFail("View Model was not defined correctly.")
+            return
+        }
+        
+        let driverID = Int.random(in: 1...3)
+        
+        var distance: Int {
+            switch driverID {
+            case 1:
+                return 0
+            case 2:
+                return Int.random(in: 1...4)
+            case 3:
+                return Int.random(in: 1...9)
+            default:
+                return 0
+            }
+        }
+        
+        let isValid = viewModel.isValidDistance(
+            for: driverID,
+            distance: distance
+        )
+        
+        XCTAssertFalse(isValid)
+    }
+    
+    func test_isValidDistance_isRetuningTrueWhenTheDistanceIsAcceptByDriver() {
+        guard let viewModel else {
+            XCTFail("View Model was not defined correctly.")
+            return
+        }
+        
+        let driverID = Int.random(in: 1...3)
+        
+        var distance: Int {
+            switch driverID {
+            case 1:
+                return Int.random(in: 1...100)
+            case 2:
+                return Int.random(in: 5...100)
+            case 3:
+                return Int.random(in: 10...100)
+            default:
+                return 10
+            }
+        }
+        
+        let isValid = viewModel.isValidDistance(
+            for: driverID,
+            distance: distance
+        )
+        
+        XCTAssertTrue(isValid)
+    }
+    
     func test_isDisabledDriverRow_isReturningTrueWhenTheChosenDriverIsNotSameAsTheCurrentDriver() {
         guard let viewModel else {
             XCTFail("View Model was not defined correctly.")

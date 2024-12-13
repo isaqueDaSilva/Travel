@@ -8,10 +8,13 @@
 import Foundation
 
 /// Representation of a confirmation status to a ride request.
-struct RideConfirmationResponse: Sendable, Decodable {
+struct RideConfirmationResponse: Sendable {
     /// Represents the confirmation status for a ride.
     let isSuccessed: Bool
-    
+}
+
+// MARK: - Decoding -
+extension RideConfirmationResponse: Decodable {
     enum CodingKeys: String, CodingKey {
         case isSuccessed = "success"
     }

@@ -8,7 +8,7 @@
 import Foundation
 
 /// Representation body for request an estimate ride.
-struct RideEstimateRequest: Sendable, Encodable {
+struct RideEstimateRequest: Sendable {
     /// Customer's unique identifier.
     let customerID: String
     
@@ -17,7 +17,10 @@ struct RideEstimateRequest: Sendable, Encodable {
     
     /// End poinr of this ride.
     let destination: String
-    
+}
+
+// MARK: - Encoding Method -
+extension RideEstimateRequest: Encodable {
     enum CodingKeys: String, CodingKey {
         case customerID = "customer_id"
         case origin = "origin"

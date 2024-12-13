@@ -5,7 +5,6 @@
 //  Created by Isaque da Silva on 12/6/24.
 //
 
-import CoreLocation
 import Foundation
 
 /// Representation of the response body with all informations for an estimate ride.
@@ -102,19 +101,5 @@ extension RideEstimateResponse.Driver {
     struct Review: Sendable, Decodable {
         let rating: Int
         let comment: String
-    }
-}
-
-extension RideEstimateResponse {
-    typealias Review = Driver.Review
-}
-
-extension RideEstimateResponse: Hashable {
-    static func == (lhs: RideEstimateResponse, rhs: RideEstimateResponse) -> Bool {
-        lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(self.id)
     }
 }

@@ -229,7 +229,7 @@ extension ChoiceARideView {
                     .init(legs: [
                         .init(
                             polyline: .init(
-                                encodedPolyline:  "dwynCtj{{GdCwDjCwC^_@PSHKV[^_@bAeALKVYlBqBz@aAr@y@`@a@pB{B|@_ALODCXY@O@M?QIa@RcDJuAc@Ce@EOCIAEAKCICGCGEECIEGECCQOqBsBqBwBo@m@CEIKq@m@mAeAIGa@e@GGGEa@a@oD_Ew@w@i@k@s@s@s@u@qAuAQQCAMOg@g@oCmCKM]_@MMKKCCEGSSUUY[OS]]KKq@u@OOY[YUc@g@AAOMQSCCc@g@CCGGYY[]i@i@_@a@k@i@Y_@DGb@k@T[V]dAsAb@e@FGjAmA@CjBwBo@q@CCo@q@k@o@ECSUGGKKm@t@CDIHUXCD"
+                                encodedPolyline: "_p~iF~ps|U_ulLnnqC_mqNvxq`@"
                             )
                         )
                     ])

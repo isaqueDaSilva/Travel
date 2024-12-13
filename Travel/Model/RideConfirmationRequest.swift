@@ -8,7 +8,7 @@
 import Foundation
 
 /// Representation of the confirmation body for a ride.
-struct RideConfirmationRequest: Sendable, Encodable {
+struct RideConfirmationRequest: Sendable {
     /// Unique identifier of a customer.
     let customerID: String
     
@@ -29,7 +29,10 @@ struct RideConfirmationRequest: Sendable, Encodable {
     
     /// Total cust of the ride.
     let value: Double
-    
+}
+
+// MARK: - Encoding Method -
+extension RideConfirmationRequest: Encodable {
     enum CodingKeys: String, CodingKey {
         case customerID = "customer_id"
         case origin

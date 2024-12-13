@@ -135,14 +135,14 @@ final class RequestRideView_ViewModel_Test: XCTestCase {
         XCTAssertEqual(viewModel.ride?.options[0].name, "Tim Cook")
         XCTAssertEqual(viewModel.ride?.options[0].vehicle, "Tesla Model 3")
         XCTAssertEqual(viewModel.ride?.options[0].value, 10.0)
-        XCTAssertEqual(viewModel.ride?.routeResponse.routes.count, 1)
-        XCTAssertEqual(viewModel.ride?.routeResponse.routes[0].coordinates.count, 3)
-        XCTAssertEqual(viewModel.ride?.routeResponse.routes[0].coordinates[0].latitude, 38.5)
-        XCTAssertEqual(viewModel.ride?.routeResponse.routes[0].coordinates[0].longitude, -120.2)
-        XCTAssertEqual(viewModel.ride?.routeResponse.routes[0].coordinates[1].latitude, 40.7)
-        XCTAssertEqual(viewModel.ride?.routeResponse.routes[0].coordinates[1].longitude, -120.95)
-        XCTAssertEqual(viewModel.ride?.routeResponse.routes[0].coordinates[2].latitude, 43.252)
-        XCTAssertEqual(viewModel.ride?.routeResponse.routes[0].coordinates[2].longitude, -126.453)
+        XCTAssertEqual(viewModel.ride?.routeResponse.routes?.count, 1)
+        XCTAssertEqual(viewModel.ride?.routeResponse.routes?[0].coordinates.count, 3)
+        XCTAssertEqual(viewModel.ride?.routeResponse.routes?[0].coordinates[0].latitude, 38.5)
+        XCTAssertEqual(viewModel.ride?.routeResponse.routes?[0].coordinates[0].longitude, -120.2)
+        XCTAssertEqual(viewModel.ride?.routeResponse.routes?[0].coordinates[1].latitude, 40.7)
+        XCTAssertEqual(viewModel.ride?.routeResponse.routes?[0].coordinates[1].longitude, -120.95)
+        XCTAssertEqual(viewModel.ride?.routeResponse.routes?[0].coordinates[2].latitude, 43.252)
+        XCTAssertEqual(viewModel.ride?.routeResponse.routes?[0].coordinates[2].longitude, -126.453)
     }
     
     func test_makeRideRequest_isThrowingAnErrorWhenTheExecutionNotFinishesYourWorkCorrectly() {

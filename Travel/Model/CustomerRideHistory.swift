@@ -16,6 +16,7 @@ struct CustomerRideHistory: Sendable {
     let rides: [Ride]
 }
 
+// MARK: - Decoding CustomerRideHistory -
 extension CustomerRideHistory: Decodable {
     enum CodingKeys: String, CodingKey {
         case customerID = "customer_id"
@@ -85,6 +86,7 @@ extension CustomerRideHistory {
     }
 }
 
+// MARK: - Decoding CustomerRideHistory.Ride -
 extension CustomerRideHistory.Ride: Decodable {
     enum CodingKeys: CodingKey {
         case id
