@@ -4,6 +4,7 @@
 3. [Tests](#tests)
 4. [Design](#design)
 5. [API](#api)
+6. [Demonstração](#demonstração)
 
 # Travel
 Um projeto conceito iOS, desenvolvido em Swift e SwiftUI, com foco em conectar motoristas a usuários que desejam uma corrida. 
