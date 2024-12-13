@@ -34,3 +34,6 @@ Além de uso de cores padrões em toda UI para evitar fadiga visual e dificuldad
 
 # API 
 O app faz uma requisição a uma API no qual é responsável por fazer o calculo da rota das viagens, confirmação de viagem, e obter o histórico de viagens do passageiro com um determinado motorista.
+
+# Demonstração
+[Clique aqui](https://youtu.be/qqgXdeo9BWw) que você será redirecionado para o video de demonstração do App funcionando, no meu canal do YouTube.
