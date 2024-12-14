@@ -106,11 +106,11 @@ extension RouteResponse.Polyline {
             longitude += lngChange
             
             // Divides the latitude value by 100000
-            // to gets a valid valid.
+            // to gets a valid latitude.
             let finalLatitude = Double(latitude) / 1e5
             
             // Divides the logitude value by 100000
-            // to gets a valid valid.
+            // to gets a valid longitude.
             let finalLongitude = Double(longitude) / 1e5
             
             coordinates.append(.init(latitude: finalLatitude, longitude: finalLongitude))
@@ -120,27 +120,17 @@ extension RouteResponse.Polyline {
     }
     
     /// Decodes an individual value of an ecoded polyline.
-    ///
-    /// This method is used to decodes individuals latitude and longitude values,
-    /// processing in bocks of 5 of the String and aplies corrections for each negative values
-    /// using complement of 2.
     /// - Parameters:
     ///   - currentIndex: The current index of the processed string.
     ///   - length: The total amount of values in the string.
     /// - Returns: Returns a Int32 representation of the processed String.
     private func decodeValue(currentIndex: inout String.Index, length: Int) -> Int32 {
         var result: Int32 = 0
-        
-        // The total amount of shifts
-        // to indicates the total amout
-        // of bytes that we need to jump
-        // in each value.
         var shift: Int32 = 0
-        
         var byte: Int32 = 0
 
         repeat {
-            // Gets the current character
+            // Gets a character by the current Index Value
             let character = encodedPolyline[currentIndex]
             
             // Advance by 1, when the current index isn't the last index.
@@ -148,27 +138,44 @@ extension RouteResponse.Polyline {
             
             // Converting the current character value
             // into a number representation of ASCII character
-            // and subtract by 63 to get the value.
+            // and subtract by 63 to get the original value.
             byte = Int32(character.asciiValue!) - 63
             
-            // Removes the extra signal bit
-            // and applies the left shift operation
-            // to adjust the value.
+            // Peforms a clean up, removing the MSB,
+            // and maintaining the the last 5 LSB,
+            // by comparing the current byte and 0x1F(31),
+            // using AND opeartion with the
+            // and then, shift left with the current
+            // amount of shift.
+            // Finaly, peforms a comparation between
+            // the current result and the byte value
+            // using OR operation and combines the
+            // two values, to reconstruct the actual value.
             result |= (byte & 0x1F) << shift
+            
+            // Increase by 5 the current shift value
+            // for don't subscribe the previous bits.
             shift += 5
         } while byte >= 0x20 // Continues the loop when the MSB is 1.
 
-        // Checks if the value is negative
-        // aplying the complement of 2.
+        // Checks the LSB,
+        // if is 1, the number negative
+        // if 0 is positive.
+        // and then, we peforms a
+        // specific opearation
+        // for each case.
         if (result & 1) == 1 {
-            // If is negative(1), applies the right shift
-            // operation and revert all bits using
-            // NOT operation.
-            result = ~(result >> 1) // Negativo
+            // If 1, the number is negative
+            // and we need to shift right
+            // the bits and then,
+            // invert the bits
+            // to get the real number.
+            result = ~(result >> 1) // Two's Complement Operation
         } else {
-            // If is positive(0), only applies
-            // the right shift operation.
-            result >>= 1 // Positivo
+            // If 0, the number is positive
+            // and we only needs to shift
+            // right to get the real number
+            result >>= 1
         }
         
         // Return the final result
