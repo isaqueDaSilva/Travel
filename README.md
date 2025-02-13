@@ -7,34 +7,39 @@
 6. [Demonstração](#demonstração)
 
 # Travel
-Um projeto conceito iOS, desenvolvido em Swift e SwiftUI, com foco em conectar motoristas a usuários que desejam uma corrida. 
+An iOS concept project, developed in Swift and SwiftUI, focusing on connecting drivers to users who want a race.
 
 # Getting started
-* Verifique se você está usando o Xcode 16, com o simulador no iOS 18<br>
-* Baixe este repositório.<br>
-* Abra o projeto.<br>
-* Compile e execute o app.<br>
+* Check if you are using Xcode 16, with the simulator on iOS 18<br>
+* Download this repository.<br>
+* Open the project.<br>
+* Compile and run the app.<br>
 
-Após a compilação, e o app estando executando normalmente, você deve ver um formulário para inserir as informações do trajeto e sua identificação.<br>
+After compilation, and the app is running normally, you should see a form to enter the route information and its identification.<br>
+
+Note: Only bellow routes are working:
+- Av. Pres. Kenedy, 2385 - Remédios, Osasco - SP, 02675-031 to Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200<br>
+- Av. Thomas Edison, 365 - Barra Funda, São Paulo - SP, 01140-000 to Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200<br>
+- Av. Brasil, 2033 - Jardim America, São Paulo - SP, 01431-001 to Av. Paulista, 1538 - Bela Vista, São Paulo - SP, 01310-200<br>
 
 # Structure
-* O Travel utiliza o padrão de arquitetura <strong>Model-View-ViewModel (MVVM)</strong><br>
-* O Model é responsável por lidar apenas com os dados necessários para do app.<br>
-* A View é responsável apenas por exibir o estado atual em que os dados se encontram.<br>
-* A ViewModel é responsável por criar uma ponte entre o Model e a View, e processar informações e ações.<br>
-* O Helper, é um conjunto de métodos padrões que auxilia a execução de algum processo, sem a necessidade de duplicação de código.<br>
-* A camada de Network, é um conjunto de métodos que são responsáveis por lidar com a comunicação entre o App e a API.<br>
+* Travel uses the architecture standard <strong>Model-View-ViewModel (MVVM)</strong><br>
+* The Model is responsible for handling only the data necessary for the app.<br>
+* View is only responsible for displaying the current state in which the data is located.<br>
+* The ViewModel is responsible for creating a bridge between the Model and the View, and processing information and actions.<br>
+* Helper is a set of standard methods that assists in the execution of some process, without the need for code duplication.<br>
+* The Network layer is a set of methods that are responsible for handling communication between the App and the API.<br>
 
 # Tests
-O Travel possuí um conjunto de testes unitários, para verificar se as funcionálidades do App estão funcionando corretamente.<br>
-Se você desejar analisa-los ou mesmo executa-lo, basta ir para a pasta <strong>TravelTests</strong>, navegar para alguma subpasta marcada com <strong>Test</strong> no final, analisa-la e/ou executar os testes.
+Travel has a set of unit tests, to check if the App's features are working correctly.<br>
+If you want to analyze them or even run it, just go to the <strong>TravelTests</strong> folder, navigate to some subfolder marked with <strong>Test</strong> at the end, analyze it and/or run the tests.
 
 # Design 
-O App foi pensado para ser simples, intuitivo e familiar para os usuários do iOS. Portanto se design foi inspirado nos Apps padrões do iOS, com forte uso de componentes padrões do sistema como o Form e o Apple Maps(Na tela para escolha de um motorista.).<br>
-Além de uso de cores padrões em toda UI para evitar fadiga visual e dificuldade ao encontrar algum componente.
+The App was designed to be simple, intuitive and familiar for iOS users. Therefore, the design was inspired by the standard iOS Apps, with strong use of standard system components such as Form and Apple Maps (On the screen to choose a driver.).<br>
+In addition to using standard colors throughout the UI to avoid visual fatigue and difficulty in finding any component.
 
 # API 
-O app faz uma requisição a uma API no qual é responsável por fazer o calculo da rota das viagens, confirmação de viagem, e obter o histórico de viagens do passageiro com um determinado motorista.
+The app makes a request to an API in which it is responsible for calculating the travel route, confirming the trip, and obtaining the passenger's travel history with a given driver.
 
 # Demonstração
-[Clique aqui](https://youtu.be/qqgXdeo9BWw) que você será redirecionado para o video de demonstração do App funcionando, no meu canal do YouTube.
+[Clique aqui](https://youtu.be/qqgXdeo9BWw) That you will be redirected to the demonstration video of the working App, on my YouTube channel.
