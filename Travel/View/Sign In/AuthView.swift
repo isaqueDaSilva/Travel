@@ -7,75 +7,76 @@
 
 import SwiftUI
 
-// TODO: Implement Signin view
 struct AuthView: View {
-    @State private var page: Page = .signin
-    @State private var isLoading: Bool = false
+    @FocusState private var focusedField: Field?
+    @State private var viewModel = ViewModel()
     
     var body: some View {
-        NavigationStack {
-            VStack {
-                // MARK: Logo
-                
-                Form {
-                    Section {
-                        VStack {
-                            Image(systemName: "point.topright.arrow.triangle.backward.to.point.bottomleft.filled.scurvepath")
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundStyle(.green)
-                                .frame(maxWidth: 85, maxHeight: 85)
-                                .padding(5)
-                                .background {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(lineWidth: 2)
-                                }
-                                .padding(.bottom, 5)
-                            
-                            Text("Travel")
-                                .font(.largeTitle)
-                                .bold()
-                        }
-                        .frame(maxWidth: .infinity)
-                        .listRowBackground(Color.clear)
-                    }
-                    
-                    
-                    Section {
-                        Picker("Action", selection: $page) {
-                            ForEach(Page.allCases, id: \.id) {
-                                Text($0.rawValue)
-                                    .tag($0)
-                            }
-                        }
-                        .pickerStyle(.segmented)
-                        
-                        if page == .signup {
-                            TextField("Name", text: .constant(""))
-                        }
-                        
-                        TextField("Email", text: .constant(""))
-                            .keyboardType(.emailAddress)
-                            .autocorrectionDisabled()
-                            .textInputAutocapitalization(.never)
-                        
-                        SecureField("Password", text: .constant(""))
-                        
-                        Button {
-                            
-                        } label: {
-                            ActionButton(
-                                isProcessing: $isLoading,
-                                title: page.rawValue,
-                                isDisabled: false
-                            ) {
-                                    
-                            }
-                        }
-                    }
+        Form {
+            LogoView()
+                .frame(maxWidth: .infinity)
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+            
+            Picker("Page", selection: $viewModel.currentPage) {
+                ForEach(Page.allCases, id: \.id) {
+                    Text($0.rawValue)
+                        .tag($0)
                 }
             }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .listRowBackground(Color.clear)
+            .listRowInsets(.init())
+            
+            Section {
+                if viewModel.currentPage == .signup {
+                    TextField("Name", text: $viewModel.name)
+                        .focused($focusedField, equals: .name)
+                }
+                
+                TextField("Email", text: $viewModel.email)
+                    .keyboardType(.emailAddress)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+                    .focused($focusedField, equals: .email)
+                
+                SecureField("Password", text: $viewModel.password)
+                    .focused($focusedField, equals: .password)
+            }
+            
+            ActionButton(
+                isProcessing: $viewModel.isLoading,
+                title: viewModel.currentPage.rawValue,
+                isDisabled: viewModel.isDisabled
+            ) {
+                focusedField = viewModel.checkFields()
+                
+                guard focusedField == nil else { return }
+                
+                viewModel.authHandler { name, email, password in
+                    // TODO: Implement real logic
+                    return .init(
+                        userProfile: .init(
+                            id: .init(),
+                            name: "Mock",
+                            email: "mock@gmail.com",
+                            createdAt: .now
+                        ),
+                        accessToken: "access_token",
+                        refreshTokenID: "123abc"
+                    )
+                } storeTokens: { accessToken, refreshTokenID in
+                    // TODO: Implement logic for store token
+                } storeProfile: { userProfile in
+                    // TODO: Implement logic for store user profile
+                }
+            }
+            .listRowBackground(Color.clear)
+            .listRowInsets(.init())
+            
         }
+        .listRowBackground(Color.clear)
     }
 }
 
@@ -85,6 +86,10 @@ extension AuthView {
         case signup = "Sign Up"
         
         var id: String { self.rawValue }
+    }
+    
+    enum Field: Hashable {
+        case name, email, password
     }
 }
 
